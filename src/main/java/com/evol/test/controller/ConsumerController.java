@@ -9,6 +9,8 @@ import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
 import org.apache.kafka.clients.consumer.KafkaConsumer;
 import org.apache.kafka.common.TopicPartition;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.stereotype.Component;
@@ -20,9 +22,11 @@ import java.util.*;
 
 @Component
 public class ConsumerController implements ApplicationListener<ContextRefreshedEvent>{
+
+    private static final Logger log = LoggerFactory.getLogger(ConsumerController.class);
+
     @Override
     public void onApplicationEvent(ContextRefreshedEvent contextRefreshedEvent) {
-
 
         KafkaConsumerConfig consumerConfig = new KafkaConsumerConfig();
 
@@ -34,13 +38,15 @@ public class ConsumerController implements ApplicationListener<ContextRefreshedE
 
             ConsumerRecords<String,String> records = kafkaConsumer.poll(Duration.ZERO);
 
+            List<ConsumerRecord<String, String>> recordsList = new ArrayList<>();
             for (ConsumerRecord<String, String> consumerRecords : records) {
-                System.out.println("当前消息分区是:"+ consumerRecords.partition()+" 当前传入值是:"+consumerRecords.value());
+                recordsList.add(consumerRecords);
+                log.info("当前消息分区是:"+ consumerRecords.partition()+" 当前传入值是:"+consumerRecords.value());
+            }
+            if(recordsList != null && recordsList.size()>0){
+                System.out.println(recordsList.size());
             }
         }
     }
 
-    public static void main(String[] args) {
-
-    }
 }

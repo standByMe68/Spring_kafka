@@ -23,11 +23,16 @@ public class KafkaConsumerConfig {
         properties.put("rebalance.max.retries", "10");
         properties.put("group.id", "client_" + 1);
         properties.put("enable.auto.commit", "true");
-        properties.put("max.poll.records", 1);
+        properties.put("fetch.min.bytes",1024000);
+        properties.put("fetch.max.wait.ms", 1000);
+        properties.put("max.poll.records", 1000);
         properties.put("key.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
         properties.put("value.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
 
         this.javaConsumerConnector = new KafkaConsumer(properties);
+
+
     }
+
 
 }
